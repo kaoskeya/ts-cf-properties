@@ -2,70 +2,110 @@
   <div class="page lists-show">
     <nav class="js-title-nav">
       {{#if editing}}
-        <form class="js-edit-form list-edit-form">
-          <input type="text" name="name" value="{{name}}">
-          <div class="nav-group right">
-            <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a>
-          </div>
-        </form>
-      {{else}}
-        <div class="nav-group">
-          <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a>
-        </div>
-
-        <h1 class="js-edit-list title-page"><span class="title-wrapper">{{name}}</span> <span class="count-list">{{incompleteCount}}</span></h1>
-
+      <form class="js-edit-form list-edit-form">
+        <input type="text" name="name" value="{{name}}">
         <div class="nav-group right">
-          <div class="nav-item options-mobile">
-            <select class="list-edit">
-              <option disabled selected>Select an action</option>
-              {{#if userId}}
-                <option value="public">Make Public</option>
-              {{else}}
-                <option value="private">Make Private</option>
-              {{/if}}
-              <option value="delete">Delete</option>
-            </select>
-            <span class="icon-cog"></span>
-          </div>
-          <div class="options-web">
-            <a class="js-toggle-list-privacy nav-item">
-              {{#if userId}}
-                <span class="icon-lock" title="Make list private"></span>
-              {{else}}
-                <span class="icon-unlock" title="Make list public"></span>
-              {{/if}}
-            </a>
-
-            <a class="js-delete-list nav-item">
-              <span class="icon-trash" title="Delete list"></span>
-            </a>
-          </div>
+          <a href="#" class="js-cancel nav-item"><span class="icon-close js-cancel" title="Cancel"></span></a>
         </div>
+      </form>
+      {{else}}
+      <div class="nav-group">
+        <a href="#" class="js-menu nav-item"><span class="icon-list-unordered" title="Show menu"></span></a>
+      </div>
+
+      <h1 class="js-edit-list title-page">
+        <span class="title-wrapper">{{name}}</span>
+        {{#if isOwner}}
+        <span class="count-list">{{incompleteCount}}</span>
+        {{/if}}
+      </h1>
+
+      <div class="nav-group right">
+        {{#if isOwner}}
+        <div class="options-web">
+          <a class="js-toggle-list-privacy nav-item">
+            {{#if userId}}
+            <span class="icon-lock" title="Make list private"></span>
+            {{else}}
+            <span class="icon-unlock" title="Make list public"></span>
+            {{/if}}
+          </a>
+
+          <a class="js-delete-list nav-item">
+            <span class="icon-trash" title="Delete list"></span>
+          </a>
+        </div>
+        {{else}}
+        <div class="nav-item options-mobile">
+          <span class="icon-cog"></span>
+        </div>
+        <div class="options-web">
+
+          <a class="js-enquire nav-item">
+            <span class="icon-add" title="Enquire"></span>
+          </a>
+        </div>
+        {{/if}}
+      </div>
       {{/if}}
 
+
+      <!--
       <form class="js-todo-new todo-new input-symbol">
         <input type="text" placeholder="Type to add new tasks">
         <span class="icon-add js-todo-add"></span>
       </form>
-    </nav>
+    -->
+  </nav>
 
 
-    <div class="content-scrollable list-items">
-      {{#if todosReady}}
+  <div class="content-scrollable list-items">
+    {{#if isOwner}}
+    {{#if todosReady}}
+    <div class="panel-group" id="accordion">
+      <div class="well">
         {{#each todos}}
-          {{> todosItem}}
+        {{> todosItem}}
         {{else}}
-          <div class="wrapper-message">
-            <div class="title-message">No tasks here</div>
-            <div class="subtitle-message">Add new tasks using the field above</div>
+        <div class="wrapper-message">
+          <div class="title-message">No Enquiries yet.</div>
+          <div class="subtitle-message">Your enquiries will appear here.</div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{else}}
+    <div class="wrapper-message">
+      <div class="title-message">Loading enquiries...</div>
+    </div>
+    {{/if}}
+    {{else}}
+    <!-- If person interested in property -->
+    <div class="well">
+      <div class="panel-heading">
+        <h4 class="panel-title">Messages</h4>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+        {{#each messages}}
+          <div class="col-sm-11 alert {{messageFrom}}">
+            {{ message }}
           </div>
         {{/each}}
-      {{else}}
-          <div class="wrapper-message">
-            <div class="title-message">Loading tasks...</div>
-          </div>
-      {{/if}}
+          <form id="sendMessage">
+            <div class="col-sm-12 col-md-9">
+              <div class="form-group">
+                <input type="text" class="form-control" id="_message" placeholder="Send Message">
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+              <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+    {{/if}}
   </div>
+</div>
 </template>

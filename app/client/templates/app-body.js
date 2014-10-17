@@ -80,10 +80,21 @@ Template.appBody.helpers({
     } else {
       return true;
     }
+  },
+  currentLangauge: function() {
+    if(!Session.get('currentLangauge')) {
+      Session.set('currentLangauge', 'Kannada' );
+      Session.set('currentLangaugeCode', 'kn' );
+    }
+    return Session.get('currentLangauge')
   }
 });
-
 Template.appBody.events({
+  'click .changeLanguage': function(e, tmpl) {
+    console.log( $(e.target) )
+    Session.set('currentLangauge', $(e.target).data('name') );
+    Session.set('currentLangaugeCode', $(e.target).data('lang') );
+  },
   'click .js-menu': function() {
     Session.set(MENU_KEY, ! Session.get(MENU_KEY));
   },
@@ -114,7 +125,7 @@ Template.appBody.events({
   },
 
   'click .js-new-list': function() {
-    var list = {name: Lists.defaultName(), incompleteCount: 0};
+    var list = {name: Lists.defaultName(), incompleteCount: 0, owner: Meteor.userId() };
     list._id = Lists.insert(list);
 
     Router.go('listsShow', list);

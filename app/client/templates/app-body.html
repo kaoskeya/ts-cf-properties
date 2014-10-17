@@ -16,6 +16,23 @@
             <a class="js-logout btn-secondary">Logout</a>
           {{/if}}
         </div>
+
+        <div class="btns-group-vertical">
+          <a href="#" class="js-user-menu btn-secondary">
+            {{#if userMenuOpen}}
+              <span class="icon-arrow-up"></span>
+              {{else}}
+              <span class="icon-arrow-down"></span>
+            {{/if}}
+            {{ currentLangauge }}
+          </a>
+          {{#if userMenuOpen}}
+            <a class="btn-secondary changeLanguage" data-lang="en" data-name="English">English</a>
+            <a class="btn-secondary changeLanguage" data-lang="kn" data-name="Kannada">Kannada</a>
+            <a class="btn-secondary changeLanguage" data-lang="hi" data-name="Hindi">Hindi</a>
+          {{/if}}
+        </div>
+
       {{else}}
         <div class="btns-group">
           <a href="{{pathFor 'signin'}}" class="btn-secondary">Sign In</a>
@@ -24,7 +41,7 @@
       {{/if}}
 
       <div class="list-todos">
-        <a class="js-new-list link-list-new"><span class="icon-plus"></span>New List</a>
+        <a class="js-new-list link-list-new"><span class="icon-plus"></span>New Property</a>
 
         {{#each lists}}
           <a href="{{pathFor 'listsShow'}}" class="list-todo {{activeListClass}}" title="{{name}}">

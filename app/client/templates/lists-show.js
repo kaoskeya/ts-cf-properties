@@ -15,6 +15,7 @@ Template.listsShow.rendered = function() {
       });
     }
   };
+  //ripples.initInputs();
 };
 
 Template.listsShow.helpers({
@@ -27,7 +28,18 @@ Template.listsShow.helpers({
   },
 
   todos: function() {
-    return Todos.find({listId: this._id}, {sort: {createdAt : -1}});
+    return Meteor.users.find( { _id: { $in: this.followers } } );
+  },
+  isOwner: function() {
+    return Meteor.userId() == this.owner
+  },
+  messages: function() {
+    var self = this;
+    var messages = Lists.findOne({ _id: this._id }).messages
+    return _.filter( messages, function(msg){ return msg.thread == Meteor.userId() } )
+  },
+  messageFrom: function() {
+    return (this.from == Meteor.userId())?'pull-right alert-info':'alert-success';
   }
 });
 
@@ -83,6 +95,24 @@ var toggleListPrivacy = function(list) {
 };
 
 Template.listsShow.events({
+
+  'submit #sendMessage': function(e, tmpl){
+    e.preventDefault()
+    e.stopPropagation()
+    Lists.update(
+      { _id: Blaze._parentData(1)._id }, 
+      { $push : { 
+        messages : { 
+          message: $( '#_message' ).val(),
+          timestamp: moment().unix(),
+          from: Meteor.userId(),
+          thread: Meteor.userId()
+        }
+      } 
+    })
+    $("#sendMessage").trigger('reset')
+  },
+
   'click .js-cancel': function() {
     Session.set(EDITING_KEY, false);
   },
@@ -141,6 +171,14 @@ Template.listsShow.events({
     template.$('.js-todo-new input').focus();
   },
 
+  'click .js-enquire': function(e, tmpl) {
+    if( !Meteor.userId() ) {
+      Router.go('/signin')
+    } else {
+      if(! _.contains( this.followers, Meteor.userId() ) )
+        Lists.update({ _id: this._id }, { $push: { followers: Meteor.userId() } })
+    }
+  },
   'submit .js-todo-new': function(event) {
     event.preventDefault();
 

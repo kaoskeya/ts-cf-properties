@@ -1,4 +1,5 @@
 <template name="todosItem">
+<!--
   <div class="list-item {{checkedClass}} {{editingClass}}">
     <label class="checkbox">
       <input type="checkbox" checked="{{checked}}" name="checked">
@@ -8,4 +9,36 @@
     <input type="text" value="{{text}}" placeholder="Task name">
     <a class="js-delete-item delete-item" href="#"><span class="icon-trash"></span></a>
   </div>
+-->
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="panel-title">
+			<a data-toggle="collapse" data-parent="#accordion" href="#{{ userID }}">
+				{{ userInfo }}
+			</a>
+		</h4>
+	</div>
+	<div id="{{ userID }}" class="panel-collapse collapse out">
+		<div class="panel-body">
+			<div class="row">
+				{{#each messages}}
+					<div class="col-sm-11 alert {{messageFrom}}">
+						{{ localMessage message }}
+					</div>
+				{{/each}}
+				<form id="sendMessage">
+					<div class="col-sm-12 col-md-9">
+						<div class="form-group">
+							<input type="text" class="form-control" id="{{userID}}_message" placeholder="Send Message">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-3">
+						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
 </template>

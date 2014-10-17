@@ -35,6 +35,7 @@ GoogleTranslationService.prototype = {
       source : source,
       target : target
     }}, function(err, result) {
+      console.log(err, result)
       callback(err, result.data.data.translations[0])
     })
 
